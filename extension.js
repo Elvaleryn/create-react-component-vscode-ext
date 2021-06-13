@@ -31,6 +31,7 @@ function activate(context) {
         const reactContent = `import React from 'react';
 import styles from './${val.split("/")[1]}.module.css';
 import cx from 'classnames';
+
 export default function ${componentName}() {
   return <div></div>;
 }`;
