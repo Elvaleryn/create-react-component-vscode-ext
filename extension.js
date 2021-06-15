@@ -70,9 +70,14 @@ export default function ${componentName}() {
                   "Created boilerplate files"
                 );
               }
-            );
+            )
+            
+           
+            vscode.workspace.openTextDocument(path.join(folderPath, "index.js")).then(doc => {
+              vscode.window.showTextDocument(doc);
+            });
           }
-        });
+        })
       });
     }
   );
