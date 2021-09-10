@@ -18,7 +18,8 @@ function activate(context) {
       const input = vscode.window.showInputBox();
       input.then((val) => {
         let componentName = val.split("/")[1];
-
+        componentName =
+          componentName.charAt(0).toUpperCase() + componentName.slice(1);
         if (componentName.includes("-")) {
           let wordsArray = componentName.split("-");
           wordsArray = wordsArray.map(
@@ -29,12 +30,14 @@ function activate(context) {
         }
 
         const reactContent = `import React from 'react';
-import styles from './${val.split("/")[1]}.module.css';
-import cx from 'classnames';
+import styles from './${val.split("/")[1]}.module.scss';
 
-export default function ${componentName}() {
+const ${componentName}: React.FC = () => {
   return <div></div>;
-}`;
+}
+
+export default ${componentName}
+`;
         console.log(wsPath);
         const folderPath = wsPath + "/components/" + val;
         fs.mkdir(folderPath, function (err) {
@@ -42,7 +45,7 @@ export default function ${componentName}() {
             console.log("failed to create directory", err);
           } else {
             fs.writeFile(
-              path.join(folderPath, "index.js"),
+              path.join(folderPath, "index.tsx"),
               reactContent,
               (err) => {
                 if (err) {
@@ -57,7 +60,7 @@ export default function ${componentName}() {
               }
             );
             fs.writeFile(
-              path.join(folderPath, val.split("/")[1] + ".module.css"),
+              path.join(folderPath, val.split("/")[1] + ".module.scss"),
               "",
               (err) => {
                 if (err) {
@@ -70,14 +73,15 @@ export default function ${componentName}() {
                   "Created boilerplate files"
                 );
               }
-            )
-            
-           
-            vscode.workspace.openTextDocument(path.join(folderPath, "index.js")).then(doc => {
-              vscode.window.showTextDocument(doc);
-            });
+            );
+
+            vscode.workspace
+              .openTextDocument(path.join(folderPath, "index.js"))
+              .then((doc) => {
+                vscode.window.showTextDocument(doc);
+              });
           }
-        })
+        });
       });
     }
   );
