@@ -29,17 +29,25 @@ function activate(context) {
           componentName = wordsArray.join("");
         }
 
+        const componentClassName =
+          componentName.charAt(0).toLowerCase() + componentName.slice(1);
+
         const reactContent = `import React from 'react';
 import styles from './${val.split("/")[1]}.module.scss';
+import cx from 'classnames';
 
-const ${componentName}: React.FC = () => {
-  return <div></div>;
+interface ${componentName}Props {
+  className?: string;
 }
 
-export default ${componentName}
+const ${componentName}: React.FC<${componentName}Props> = ({ className }) => {
+  return <div className={cx(styles.${componentClassName}, className)}></div>;
+}
+
+export default ${componentName};
 `;
         console.log(wsPath);
-        const folderPath = wsPath + "/components/" + val;
+        const folderPath = wsPath + "/src/components/" + val;
         fs.mkdir(folderPath, function (err) {
           if (err) {
             console.log("failed to create directory", err);
