@@ -36,18 +36,19 @@ function activate(context) {
 import styles from './${val.split("/")[1]}.module.scss';
 import cx from 'classnames';
 
-interface ${componentName}Props {
-  className?: string;
-}
-
 const ${componentName}: React.FC<${componentName}Props> = ({ className }) => {
   return <div className={cx(styles.${componentClassName}, className)}></div>;
 }
 
 export default ${componentName};
 `;
+        const typeContent = `
+interface ${componentName}Props {
+  className?: string;
+}`;
         console.log(wsPath);
-        const folderPath = wsPath + "/src/components/" + val;
+        const folderPath = wsPath + "/src/components/ui/" + val;
+        const typesFolderPath = wsPath + "/src/types/components/ui/" + val;
         fs.mkdir(folderPath, function (err) {
           if (err) {
             console.log("failed to create directory", err);
@@ -88,6 +89,27 @@ export default ${componentName};
               .then((doc) => {
                 vscode.window.showTextDocument(doc);
               });
+          }
+        });
+        fs.mkdir(typesFolderPath, function (err) {
+          if (err) {
+            console.log("failed");
+          } else {
+            fs.writeFile(
+              path.join(typesFolderPath, "index.tsx"),
+              typeContent,
+              (err) => {
+                if (err) {
+                  console.log(err);
+                  return vscode.window.showErrorMessage(
+                    "Failed to create boilerplate file!"
+                  );
+                }
+                vscode.window.showInformationMessage(
+                  "Created boilerplate files"
+                );
+              }
+            );
           }
         });
       });
